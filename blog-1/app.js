@@ -1,9 +1,12 @@
 const handleBlogRouter = require("./src/router/blog");
 const handleUserRouter = require('./src/router/user');
+const querystring = require("querystring")
 const serverHandler = (req,res) => {
   res.writeHead(200,{"Content-Type":"application/json"});
-
-
+  let url = req.url;
+  req.path = url.split("?")[0];
+  req.query = querystring.parse(url.split("?")[1]) 
+  
  //处理博客返回信息 
  const postData = handleBlogRouter(req,res);
   if(postData) {
