@@ -1,7 +1,6 @@
 const { getList, getDetail, newBlog, updateBlog } = require("../controller/blog")
 const { SuccessModel, ErrorModel } = require("../model/resModel")
 //处理postData
-
 const handleBlogRouter = (req, res) => {
     const method = req.method;
     // 获取博客列表
@@ -47,5 +46,4 @@ const handleBlogRouter = (req, res) => {
         }
     }
 }
-
 module.exports = handleBlogRouter
