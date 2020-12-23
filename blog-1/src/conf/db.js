@@ -19,5 +19,5 @@ if (env == "dev") {
     }
 }
 module.exports = {
-    CONF
+    MYSQL_CONF
 }
