@@ -32,26 +32,39 @@ const serverHandler = (req, res) => {
     let url = req.url;
     req.path = url.split("?")[0];
     req.query = querystring.parse(url.split("?")[1])
+
+    //获取cookie的值
+    req.cookie = {}
+    const cookieStr = req.headers.cookie || '';
+    cookieStr.split(";").forEach(item => {
+        if (!item) {
+            return
+        }
+        const arr = item.split("=");
+        const key = arr[0];
+        const val = arr[1];
+        req.cookie[key] = val
+    })
+
     getPostData(req).then(postData => {
         req.body = postData;
         //处理博客返回信息 
-        const blogResult= handleBlogRouter(req, res)
-        if(blogResult) {
-            blogResult.then(blogData=>{
+        const blogResult = handleBlogRouter(req, res)
+        if (blogResult) {
+            blogResult.then(blogData => {
                 res.end(JSON.stringify(blogData))
             });
-
-            return 
-        }
-        // 处理登录返回信息
-        const useData = handleUserRouter(req, res)
-        if (useData) {
-            res.end(
-                JSON.stringify(useData)
-            )
             return
         }
 
+        // 处理登录返回信息
+        const useResult = handleUserRouter(req, res)
+        if (useResult) {
+            useResult.then(useData => {
+                res.end(JSON.stringify(useData))
+            })
+            return
+        }
 
         //如果没有命中请求返回404
         res.writeHead(404, {
@@ -59,7 +72,7 @@ const serverHandler = (req, res) => {
         })
         res.write("not found 404")
         res.end()
-        })
+    })
 }
 
 module.exports = serverHandler

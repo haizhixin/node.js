@@ -7,42 +7,51 @@ const handleBlogRouter = (req, res) => {
     if (method === "GET" && req.path === "/api/blog/list") {
         const author = req.query.author || ""
         const keyword = req.query.keyword || ""
-        return getList(author, keyword).then(data=>{
-            return new SuccessModel(data,"成功")
+        return getList(author, keyword).then(data => {
+            return new SuccessModel(data, "成功")
         })
     }
     // 获取博客详情
     if (method === "GET" && req.path === "/api/blog/detail") {
         const id = req.query.id || "";
-        const detailData = getDetail(id);
-        if (detailData) {
-            return new SuccessModel(detailData, "成功")
-        }
+        const author = req.query.author || ""
+        return getDetail(id).then(data => {
+            return new SuccessModel(data, "成功")
+        })
     }
     // 新增博客
     if (method === "POST" && req.path === "/api/blog/new") {
         const postData = req.body;
-        const listData = newBlog(postData);
-        if (listData) {
-            return new SuccessModel(listData, "成功插入")
-        }
-    }
-    // 删除博客
-    if (method === "POST" && req.path === "/api/blog/del") {
-        return {
-            msg: "删除博客成功"
-        }
+        return newBlog(postData).then(data => {
+            if (data) {
+                return new SuccessModel(data, "插入成功")
+            }
+            return new ErrorModel("新增失败")
+        })
     }
     // 更新博客
     if (method === "POST" && req.path === "/api/blog/update") {
         const id = req.query.id || "";
         const postData = req.body;
-        const result = updateBlog(id, postData);
-        if (result) {
-            return new SuccessModel()
-        } else {
-            return new ErrorModel()
-        }
+        return updateBlog(id, postData).then(data => {
+            if (data) {
+                return new SuccessModel("更新博客成功")
+            } else {
+                return new ErrorModel("更新博客失败")
+            }
+        });
+    }
+
+    // 删除博客
+    if (method === "POST" && req.path === "/api/blog/del") {
+        const id = req.query.id || "";
+        const author = req.query.author || "";
+        return deleteBlog(id, author).then(data => {
+            if (data) {
+                return new SuccessModel("删除成功")
+            }
+            return new ErrorModel("删除失败")
+        })
     }
 }
 module.exports = handleBlogRouter
