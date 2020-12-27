@@ -1,4 +1,4 @@
-const { getList, getDetail, newBlog, updateBlog } = require("../controller/blog")
+const { getList, getDetail, newBlog, updateBlog,deleteBlog } = require("../controller/blog")
 const { SuccessModel, ErrorModel } = require("../model/resModel")
 //处理postData
 const handleBlogRouter = (req, res) => {
@@ -45,7 +45,7 @@ const handleBlogRouter = (req, res) => {
     // 删除博客
     if (method === "POST" && req.path === "/api/blog/del") {
         const id = req.query.id || "";
-        const author = req.query.author || "";
+        const {author} = req.body;
         return deleteBlog(id, author).then(data => {
             if (data) {
                 return new SuccessModel("删除成功")

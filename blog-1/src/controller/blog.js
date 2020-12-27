@@ -35,8 +35,9 @@ const newBlog = (postData) => {
 }
 //更新博客
 const updateBlog = (id, postData = {}) => {
-    const { author, title, content, createtime } = postData;
-    let sql = `update blogs set title='${title}',content='${content}',createtime=${createtime} where author='${author}' and id = ${id}`;
+    const { author, title, content } = postData;
+    const createtime = Date.now()
+    let sql = `update blogs set title='${title}',content='${content}',createtime=${createtime} where author='${author}' and id=${id}`;
     return exec(sql).then(updateData => {
         if (updateData.affectedRows > 0) {
             return true
@@ -47,7 +48,8 @@ const updateBlog = (id, postData = {}) => {
 }
 
 const deleteBlog = (id, author) => {
-    let sql = `delete from blogs where id=${id} and author='${author}'`
+    let sql = `delete from blogs where id=${id} and author='${author}'`;
+    console.log(sql)
     // 删除成功
     return exec(sql).then(data => {
         if (data.affectedRows > 0) {
