@@ -20,5 +20,6 @@ function exec(sql) {
 
 // 此处不关闭连接否则执行完一个sql之后就会断开连接导致该方法只能执行一次
 module.exports = {
-    exec
+    exec,
+    escape: mysql.escape //防止sql注入
 }
