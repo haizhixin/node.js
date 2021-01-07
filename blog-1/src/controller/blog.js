@@ -37,8 +37,9 @@ const newBlog = (postData) => {
 const updateBlog = (id, postData = {}) => {
     const { author, title, content } = postData;
     const createtime = Date.now()
-    let sql = `update blogs set title='${title}',content='${content}',createtime=${createtime} where author='${author}' and id=${id}`;
+    let sql = `update blogs set title='${title}',content='${content}',createtime=${createtime} where  id=${id}`;
     return exec(sql).then(updateData => {
+        console.log(updateData,"updateData")
         if (updateData.affectedRows > 0) {
             return true
         }
