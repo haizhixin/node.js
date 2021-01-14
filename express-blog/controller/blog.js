@@ -1,4 +1,5 @@
 //执行sql查询语句从数据库中获取数据
+const xss = require('xss')
 const { exec } = require("../db/mysql")
 //博客列表
 const getList = (author, keyword) => {
@@ -23,7 +24,10 @@ const getDetail = (id) => {
 
 // 新建博客就是往数据库中插入数据
 const newBlog = (postData) => {
-    const { author, title, content } = postData;
+    // 新建博客需要做防xss攻击
+    const author = postData.author;
+    const title = xss(blogData.title)
+    const content = xss(blogData.content)
     const createtime = Date.now();
     let sql = `insert into blogs (author,title,content,createtime) values( '${author}','${title}','${content}',${createtime})`;
     //此时数据要插入到数据库中会返回一个id 为3
@@ -35,11 +39,13 @@ const newBlog = (postData) => {
 }
 //更新博客
 const updateBlog = (id, postData = {}) => {
-    const { author, title, content } = postData;
+    // 更新博客需要做防xss攻击
+    const title = xss(postData.title)
+    const content = xss(postData.content)
     const createtime = Date.now()
     let sql = `update blogs set title='${title}',content='${content}',createtime=${createtime} where  id=${id}`;
     return exec(sql).then(updateData => {
-        console.log(updateData,"updateData")
+        console.log(updateData, "updateData")
         if (updateData.affectedRows > 0) {
             return true
         }
